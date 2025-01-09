@@ -1,0 +1,32 @@
+{
+    "users": [
+      {
+        "username": "User",
+        "password": "Study",
+        "role": "student"
+      }
+    ],
+    "topics": [
+      {
+        "id": 1,
+        "section": "Biology",
+        "title": "Cell Structure",
+        "description": "Learn about the structure and function of cells.",
+        "status": "Backlog"
+      },
+      {
+        "id": 2,
+        "section": "Chemistry",
+        "title": "Atomic Structure",
+        "description": "Understand the basics of atomic structure.",
+        "status": "In Progress"
+      },
+      {
+        "id": 3,
+        "section": "Perceptual Ability",
+        "title": "Pattern Folding",
+        "description": "Practice pattern folding techniques.",
+        "status": "Confident"
+      }
+    ]
+  }

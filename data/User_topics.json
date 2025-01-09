@@ -1,0 +1,113 @@
+{
+  "DAT_Topics": [
+    {
+      "subject": "Survey of the Natural Sciences",
+      "importance": "High",
+      "topics": [
+        {
+          "name": "Biology",
+          "subtopics": [
+            "Cell and Molecular Biology",
+            "Diversity of Life: Vertebrates and Invertebrates",
+            "Developmental Biology",
+            "Genetics",
+            "Evolution, Ecology, and Behavior",
+            "Structure and Function of Systems"
+          ]
+        },
+        {
+          "name": "General Chemistry",
+          "subtopics": [
+            "Stoichiometry",
+            "States of Matter",
+            "Thermochemistry",
+            "Atomic and Molecular Structure",
+            "Periodic Properties",
+            "Solutions",
+            "Acids and Bases",
+            "Chemical Kinetics and Equilibrium"
+          ]
+        },
+        {
+          "name": "Organic Chemistry",
+          "subtopics": [
+            "Mechanisms",
+            "Chemical and Physical Properties of Molecules",
+            "Stereochemistry",
+            "Nomenclature",
+            "Reactions",
+            "Aromatics and Bonding",
+            "Oxygen- and Nitrogen-Containing Compounds"
+          ]
+        }
+      ]
+    },
+    {
+      "subject": "Perceptual Ability Test",
+      "importance": "High",
+      "topics": [
+        {
+          "name": "Keyhole (Aperture) Problems"
+        },
+        {
+          "name": "Top-Front-End (View Recognition) Problems"
+        },
+        {
+          "name": "Angle Ranking"
+        },
+        {
+          "name": "Hole Punching (Paper Folding)"
+        },
+        {
+          "name": "Cube Counting"
+        },
+        {
+          "name": "Pattern Folding (3D Form Development)"
+        }
+      ]
+    },
+    {
+      "subject": "Reading Comprehension",
+      "importance": "Medium",
+      "topics": [
+        {
+          "name": "Passage-Based Questions",
+          "subtopics": [
+            "Scientific Topics",
+            "Social Sciences",
+            "Humanities"
+          ]
+        },
+        {
+          "name": "Skills Tested",
+          "subtopics": [
+            "Main Idea",
+            "Detail Recognition",
+            "Inference",
+            "Tone and Purpose"
+          ]
+        }
+      ]
+    },
+    {
+      "subject": "Quantitative Reasoning",
+      "importance": "Medium",
+      "topics": [
+        {
+          "name": "Mathematical Problems",
+          "subtopics": [
+            "Algebra",
+            "Numeric Calculations",
+            "Probability and Statistics",
+            "Geometry",
+            "Trigonometry",
+            "Word Problems"
+          ]
+        },
+        {
+          "name": "Data Analysis and Interpretation"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - StudyTracker</title>
+  <link rel="stylesheet" href="https://calculatorsplus.com/darkandpurple.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="login-container">
+    <h1>StudyTracker</h1>
+    <form id="login-form">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter username" required>
+      
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password" required>
+      
+      <button type="submit">Login</button>
+    </form>
+    <p id="error-message" class="error"></p>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const errorMessage = document.getElementById('error-message');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (username === 'User' && password === 'Study') {
+        // Send login request to PHP to set session
+        const response = await fetch('login.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `username=${encodeURIComponent(username)}`
+        });
+
+        if (response.ok) {
+          window.location.href = 'dashboard.html'; // Redirect to Dashboard
+        } else {
+          errorMessage.textContent = 'Login failed. Please try again.';
+        }
+      } else {
+        errorMessage.textContent = 'Invalid username or password.';
+      }
+    });
+  </script>
+</body>
+</html>

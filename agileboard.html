@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agile Board - StudyTracker</title>
+  <link rel="stylesheet" href="https://calculatorsplus.com/darkandpurple.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="agile-board">
+    <h1>Agile Board</h1>
+    <div class="columns">
+      <div class="column" id="backlog">
+        <h2>Backlog</h2>
+        <div class="card" draggable="true" data-stage="backlog">Cell Structure</div>
+      </div>
+      <div class="column" id="studying">
+        <h2>Studying</h2>
+        <div class="card" draggable="true" data-stage="studying">Atomic Structure</div>
+      </div>
+       <div class="column" id="confident">
+        <h2>Confident</h2>
+        <div class="card" draggable="true" data-stage="confident">Pattern Folding</div>
+      </div>
+       <div class="column" id="need-work">
+        <h2>Need Work</h2>
+        <div class="card" draggable="true" data-stage="need-work">Calculus</div>
+      </div>
+       <div class="column" id="need-help">
+        <h2>Need Help</h2>
+         <div class="card" draggable="true" data-stage="need-help">Organic Chemistry</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mobile-context-menu" class="mobile-context-menu">
+    </div>
+
+  <script>
+    const cards = document.querySelectorAll('.card');
+    const columns = document.querySelectorAll('.column');
+    const mobileContextMenu = document.getElementById('mobile-context-menu');
+    let draggedCard = null;
+    let isMobile = window.innerWidth <= 768;
+    const allStages = ['backlog', 'studying', 'confident', 'need-work', 'need-help'];
+
+    function updateMobileView() {
+      isMobile = window.innerWidth <= 768;
+      if (!isMobile) {
+        mobileContextMenu.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('resize', updateMobileView);
+    updateMobileView();
+
+    cards.forEach(card => {
+      card.addEventListener('dragstart', dragStart);
+      card.addEventListener('dragend', dragEnd);
+      card.addEventListener('click', handleCardClick);
+    });
+
+    columns.forEach(column => {
+      column.addEventListener('dragover', dragOver);
+      column.addEventListener('drop', drop);
+    });
+
+    function dragStart(e) {
+      if (!isMobile) {
+        draggedCard = e.target;
+        e.dataTransfer.setData('text/plain', e.target.textContent);
+        setTimeout(() => e.target.classList.add('hidden'), 0);
+      }
+    }
+
+    function dragEnd(e) {
+      if (!isMobile) {
+        e.target.classList.remove('hidden');
+        draggedCard = null;
+      }
+    }
+
+    function dragOver(e) {
+      if (!isMobile) {
+        e.preventDefault();
+      }
+    }
+
+    function drop(e) {
+      if (!isMobile && draggedCard) {
+        e.preventDefault();
+        e.target.appendChild(draggedCard);
+      }
+    }
+
+    function handleCardClick(e) {
+      if (isMobile) {
+        draggedCard = e.target;
+        const currentStage = draggedCard.dataset.stage;
+        const otherStages = allStages.filter(stage => stage !== currentStage);
+        
+        mobileContextMenu.innerHTML = '';
+        otherStages.forEach(stage => {
+          const button = document.createElement('button');
+          button.dataset.action = stage;
+          button.textContent = stage;
+          mobileContextMenu.appendChild(button);
+        });
+
+        mobileContextMenu.style.display = 'flex';
+        mobileContextMenu.style.top = `${e.clientY}px`;
+        mobileContextMenu.style.left = `${e.clientX}px`;
+      }
+    }
+
+    mobileContextMenu.addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON' && draggedCard) {
+        const action = e.target.dataset.action;
+        const targetColumn = document.getElementById(action);
+        if (targetColumn) {
+          targetColumn.appendChild(draggedCard);
+          draggedCard.dataset.stage = action;
+          draggedCard = null;
+          mobileContextMenu.style.display = 'none';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

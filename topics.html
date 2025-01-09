@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topics - StudyTracker</title>
+  <link rel="stylesheet" href="https://calculatorsplus.com/darkandpurple.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="topics-container">
+    <div class="topics-header">
+      <h1>Topics List</h1>
+      <div class="header-actions">
+        <span class="actions-icon" onclick="toggleHeaderActions(this, event)">&#8942;</span>
+        <div class="header-actions-menu" style="display:none;">
+          <button id="add-topic-btn">Add Topic</button>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <input type="text" id="search" placeholder="Search topics...">
+    </div>
+    <div id="topics-list">
+      <!-- Topics will be dynamically loaded here -->
+    </div>
+  </div>
+
+  <!-- Add Topic Modal -->
+  <div id="add-topic-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add New Topic</h2>
+      <form id="add-topic-form" action="add_topic.php" method="post">
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject" placeholder="Enter subject" required>
+        
+        <label for="importance">Importance</label>
+        <select id="importance" name="importance" required>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        
+        <label for="topic-name">Topic Name</label>
+        <input type="text" id="topic-name" name="topic-name" placeholder="Enter topic name" required>
+        
+        <label for="subtopics">Subtopics (comma-separated)</label>
+        <textarea id="subtopics" name="subtopics" placeholder="Enter subtopics"></textarea>
+        
+        <button type="submit">Add Topic</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const currentUser = localStorage.getItem('currentUser');
+    const topicsList = document.getElementById('topics-list');
+    const addTopicModal = document.getElementById('add-topic-modal');
+    const addTopicBtn = document.getElementById('add-topic-btn');
+    const closeBtn = document.querySelector('.close');
+    const headerActionsIcon = document.querySelector('.header-actions .actions-icon');
+    const headerActionsMenu = document.querySelector('.header-actions-menu');
+    const addTopicForm = document.getElementById('add-topic-form');
+
+    // Load topics from user-specific JSON
+    async function loadTopics() {
+      const response = await fetch(`data/${currentUser}_topics.json`);
+      const data = await response.json();
+      topicsList.innerHTML = '';
+
+      data.DAT_Topics.forEach(subject => {
+        const subjectCard = document.createElement('div');
+        subjectCard.className = 'subject-card';
+        subjectCard.innerHTML = `
+          <div class="subject-header" onclick="toggleSection(this)">
+            <h2>${subject.subject}</h2>
+            <span class="importance">${subject.importance}</span>
+          </div>
+          <div class="topics-section">
+            ${subject.topics.map(topic => `
+              <div class="topic-card">
+                <div class="topic-header" onclick="toggleSection(this)">
+                  <h3>${topic.name}</h3>
+                  <div class="topic-actions">
+                    <span class="actions-icon" onclick="toggleActions(this, event)">&#8942;</span>
+                    <div class="actions-menu" style="display:none;">
+                      <button onclick="removeTopic('${subject.subject}', '${topic.name}')">Remove</button>
+                    </div>
+                  </div>
+                </div>
+                ${topic.subtopics ? `
+                  <div class="subtopics-section">
+                    ${topic.subtopics.map(subtopic => `
+                      <div class="subtopic">${subtopic}</div>
+                    `).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            `).join('')}
+          </div>
+        `;
+        topicsList.appendChild(subjectCard);
+      });
+    }
+
+    // Remove topic functionality
+    async function removeTopic(subject, topicName) {
+      const response = await fetch(`data/${currentUser}_topics.json`);
+      const data = await response.json();
+
+      const subjectIndex = data.DAT_Topics.findIndex(s => s.subject === subject);
+        if (subjectIndex !== -1) {
+            const topicIndex = data.DAT_Topics[subjectIndex].topics.findIndex(t => t.name === topicName);
+            if (topicIndex !== -1) {
+                data.DAT_Topics[subjectIndex].topics.splice(topicIndex, 1);
+                if (data.DAT_Topics[subjectIndex].topics.length === 0) {
+                    data.DAT_Topics.splice(subjectIndex, 1);
+                }
+            }
+        }
+
+      // Save updated topics
+      await fetch(`data/${currentUser}_topics.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      loadTopics(); // Reload topics
+    }
+
+    // Modal functionality
+    addTopicBtn.addEventListener('click', () => {
+      addTopicModal.style.display = 'flex';
+      headerActionsMenu.style.display = 'none'; // Close the header menu
+    });
+
+    closeBtn.addEventListener('click', () => {
+      addTopicModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+      if (event.target === addTopicModal) {
+        addTopicModal.style.display = 'none';
+      }
+      // Close actions menu if clicked outside
+      if (!event.target.closest('.topic-actions')) {
+        document.querySelectorAll('.actions-menu').forEach(menu => {
+          menu.style.display = 'none';
+        });
+      }
+      // Close header actions menu if clicked outside
+      if (!event.target.closest('.header-actions')) {
+        headerActionsMenu.style.display = 'none';
+      }
+    });
+
+    function toggleSection(element) {
+      const section = element.nextElementSibling;
+      if (section) {
+        section.style.display = section.style.display === 'block' ? 'none' : 'block';
+      }
+    }
+
+    function toggleActions(element, event) {
+      event.stopPropagation();
+      const actionsMenu = element.nextElementSibling;
+      actionsMenu.style.display = actionsMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleHeaderActions(element, event) {
+      event.stopPropagation();
+      headerActionsMenu.style.display = headerActionsMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    addTopicForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(addTopicForm);
+
+        const response = await fetch('add_topic.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log(data.message);
+            addTopicModal.style.display = 'none';
+            loadTopics(); // Reload topics
+        } else {
+            console.error(data.error);
+        }
+    });
+
+    loadTopics(); // Initial load
+  </script>
+</body>
+</html>
