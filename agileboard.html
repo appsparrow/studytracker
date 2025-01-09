@@ -8,34 +8,39 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="agile-board">
-    <h1>Agile Board</h1>
-    <div class="columns">
-      <div class="column" id="backlog">
-        <h2>Backlog</h2>
-        <div class="card" draggable="true" data-stage="backlog">Cell Structure</div>
-      </div>
-      <div class="column" id="studying">
-        <h2>Studying</h2>
-        <div class="card" draggable="true" data-stage="studying">Atomic Structure</div>
-      </div>
-       <div class="column" id="confident">
-        <h2>Confident</h2>
-        <div class="card" draggable="true" data-stage="confident">Pattern Folding</div>
-      </div>
-       <div class="column" id="need-work">
-        <h2>Need Work</h2>
-        <div class="card" draggable="true" data-stage="need-work">Calculus</div>
-      </div>
-       <div class="column" id="need-help">
-        <h2>Need Help</h2>
-         <div class="card" draggable="true" data-stage="need-help">Organic Chemistry</div>
+  <div id="toast-container"></div>
+  <div class="app-container">
+    <div id="header-container"></div>
+    <div class="agile-board">
+      <h1>Agile Board</h1>
+      <div class="columns">
+        <div class="column" id="backlog">
+          <h2>Backlog</h2>
+          <div class="card" draggable="true" data-stage="backlog">Cell Structure</div>
+        </div>
+        <div class="column" id="studying">
+          <h2>Studying</h2>
+          <div class="card" draggable="true" data-stage="studying">Atomic Structure</div>
+        </div>
+         <div class="column" id="confident">
+          <h2>Confident</h2>
+          <div class="card" draggable="true" data-stage="confident">Pattern Folding</div>
+        </div>
+         <div class="column" id="need-work">
+          <h2>Need Work</h2>
+          <div class="card" draggable="true" data-stage="need-work">Calculus</div>
+        </div>
+         <div class="column" id="need-help">
+          <h2>Need Help</h2>
+           <div class="card" draggable="true" data-stage="need-help">Organic Chemistry</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="mobile-context-menu" class="mobile-context-menu">
+    <div id="mobile-context-menu" class="mobile-context-menu">
     </div>
+    <div id="footer-container"></div>
+  </div>
 
   <script>
     const cards = document.querySelectorAll('.card');
@@ -44,6 +49,19 @@
     let draggedCard = null;
     let isMobile = window.innerWidth <= 768;
     const allStages = ['backlog', 'studying', 'confident', 'need-work', 'need-help'];
+    const headerContainer = document.getElementById('header-container');
+    const footerContainer = document.getElementById('footer-container');
+
+    // Load header and footer
+    async function loadHeaderFooter() {
+      const headerResponse = await fetch('header.html');
+      const headerContent = await headerResponse.text();
+      headerContainer.innerHTML = headerContent;
+
+      const footerResponse = await fetch('footer.html');
+      const footerContent = await footerResponse.text();
+      footerContainer.innerHTML = footerContent;
+    }
 
     function updateMobileView() {
       isMobile = window.innerWidth <= 768;
@@ -126,6 +144,8 @@
         }
       }
     });
+
+    loadHeaderFooter();
   </script>
 </body>
 </html>

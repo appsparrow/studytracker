@@ -223,3 +223,128 @@ button:hover {
 .header-actions-menu button:hover {
   background-color: #3a3a4f;
 }
+
+/* Toast Styles */
+#toast-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.toast {
+  background-color: #2a2a40;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 300px;
+}
+
+.toast.success {
+  background-color: #4caf50;
+}
+
+.toast.error {
+  background-color: #f44336;
+}
+
+.toast-close {
+  cursor: pointer;
+  font-size: 1.2em;
+  margin-left: 10px;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-container > * {
+  flex: 0 0 auto;
+}
+
+.app-container > .topics-container,
+.app-container > .login-container,
+.app-container > .dashboard-container,
+.app-container > .agile-board {
+  flex: 1 1 auto;
+}
+
+.app-header {
+  background: linear-gradient(to right, #6c5ce7, #4a148c);
+  padding: 10px 20px;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  margin: 0;
+}
+
+.app-header .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-header .app-title {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.app-header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.app-header .user-name {
+  font-weight: bold;
+}
+
+.app-header .logout-btn {
+  background-color: #ff7675;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.app-header .logout-btn:hover {
+  background-color: #ff4d4d;
+}
+
+.app-header nav {
+  display: flex;
+  gap: 20px;
+}
+
+.app-header a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.app-footer {
+  background-color: #3a3a4f;
+  padding: 10px 20px;
+  text-align: center;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}

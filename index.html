@@ -8,23 +8,41 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="login-container">
-    <h1>StudyTracker</h1>
-    <form id="login-form">
-      <label for="username">Username</label>
-      <input type="text" id="username" placeholder="Enter username" required>
-      
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Enter password" required>
-      
-      <button type="submit">Login</button>
-    </form>
-    <p id="error-message" class="error"></p>
+  <div id="toast-container"></div>
+  <div class="app-container">
+    <div id="header-container"></div>
+    <div class="login-container">
+      <h1>StudyTracker</h1>
+      <form id="login-form">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter username" required>
+        
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" required>
+        
+        <button type="submit">Login</button>
+      </form>
+      <p id="error-message" class="error"></p>
+    </div>
+    <div id="footer-container"></div>
   </div>
 
   <script>
     const loginForm = document.getElementById('login-form');
     const errorMessage = document.getElementById('error-message');
+    const headerContainer = document.getElementById('header-container');
+    const footerContainer = document.getElementById('footer-container');
+
+    // Load header and footer
+    async function loadHeaderFooter() {
+      const headerResponse = await fetch('header.html');
+      const headerContent = await headerResponse.text();
+      headerContainer.innerHTML = headerContent;
+
+      const footerResponse = await fetch('footer.html');
+      const footerContent = await footerResponse.text();
+      footerContainer.innerHTML = footerContent;
+    }
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -50,6 +68,8 @@
         errorMessage.textContent = 'Invalid username or password.';
       }
     });
+
+    loadHeaderFooter();
   </script>
 </body>
 </html>

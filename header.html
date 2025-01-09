@@ -1,0 +1,24 @@
+<header class="app-header">
+    <div class="header-content">
+      <h1 class="app-title">StudyTracker</h1>
+      <div class="header-actions">
+        <span class="user-name"></span>
+        <button id="logout-btn" class="logout-btn">Logout</button>
+      </div>
+    </div>
+  </header>
+  <script>
+    const userNameSpan = document.querySelector('.user-name');
+    const logoutBtn = document.getElementById('logout-btn');
+  
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      userNameSpan.textContent = currentUser;
+    }
+  
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    });
+  </script>
+  

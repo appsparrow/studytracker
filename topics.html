@@ -8,49 +8,54 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="topics-container">
-    <div class="topics-header">
-      <h1>Topics List</h1>
-      <div class="header-actions">
-        <span class="actions-icon" onclick="toggleHeaderActions(this, event)">&#8942;</span>
-        <div class="header-actions-menu" style="display:none;">
-          <button id="add-topic-btn">Add Topic</button>
+  <div id="toast-container"></div>
+  <div class="app-container">
+    <div id="header-container"></div>
+    <div class="topics-container">
+      <div class="topics-header">
+        <h1>Topics List</h1>
+        <div class="header-actions">
+          <span class="actions-icon" onclick="toggleHeaderActions(this, event)">&#8942;</span>
+          <div class="header-actions-menu" style="display:none;">
+            <button id="add-topic-btn">Add Topic</button>
+          </div>
         </div>
       </div>
+      <div class="actions">
+        <input type="text" id="search" placeholder="Search topics...">
+      </div>
+      <div id="topics-list">
+        <!-- Topics will be dynamically loaded here -->
+      </div>
     </div>
-    <div class="actions">
-      <input type="text" id="search" placeholder="Search topics...">
-    </div>
-    <div id="topics-list">
-      <!-- Topics will be dynamically loaded here -->
-    </div>
-  </div>
 
-  <!-- Add Topic Modal -->
-  <div id="add-topic-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Add New Topic</h2>
-      <form id="add-topic-form" action="add_topic.php" method="post">
-        <label for="subject">Subject</label>
-        <input type="text" id="subject" name="subject" placeholder="Enter subject" required>
-        
-        <label for="importance">Importance</label>
-        <select id="importance" name="importance" required>
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
-        </select>
-        
-        <label for="topic-name">Topic Name</label>
-        <input type="text" id="topic-name" name="topic-name" placeholder="Enter topic name" required>
-        
-        <label for="subtopics">Subtopics (comma-separated)</label>
-        <textarea id="subtopics" name="subtopics" placeholder="Enter subtopics"></textarea>
-        
-        <button type="submit">Add Topic</button>
-      </form>
+    <!-- Add Topic Modal -->
+    <div id="add-topic-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add New Topic</h2>
+        <form id="add-topic-form" action="add_topic.php" method="post">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="Enter subject" required>
+          
+          <label for="importance">Importance</label>
+          <select id="importance" name="importance" required>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          
+          <label for="topic-name">Topic Name</label>
+          <input type="text" id="topic-name" name="topic-name" placeholder="Enter topic name" required>
+          
+          <label for="subtopics">Subtopics (comma-separated)</label>
+          <textarea id="subtopics" name="subtopics" placeholder="Enter subtopics"></textarea>
+          
+          <button type="submit">Add Topic</button>
+        </form>
+      </div>
     </div>
+    <div id="footer-container"></div>
   </div>
 
   <script>
@@ -62,6 +67,20 @@
     const headerActionsIcon = document.querySelector('.header-actions .actions-icon');
     const headerActionsMenu = document.querySelector('.header-actions-menu');
     const addTopicForm = document.getElementById('add-topic-form');
+    const toastContainer = document.getElementById('toast-container');
+    const headerContainer = document.getElementById('header-container');
+    const footerContainer = document.getElementById('footer-container');
+
+    // Load header and footer
+    async function loadHeaderFooter() {
+      const headerResponse = await fetch('header.html');
+      const headerContent = await headerResponse.text();
+      headerContainer.innerHTML = headerContent;
+
+      const footerResponse = await fetch('footer.html');
+      const footerContent = await footerResponse.text();
+      footerContainer.innerHTML = footerContent;
+    }
 
     // Load topics from user-specific JSON
     async function loadTopics() {
@@ -174,6 +193,24 @@
       headerActionsMenu.style.display = headerActionsMenu.style.display === 'block' ? 'none' : 'block';
     }
 
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.classList.add('toast', type);
+        toast.innerHTML = `
+            <span class="toast-message">${message}</span>
+            <span class="toast-close" onclick="closeToast(this)">&times;</span>
+        `;
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 5000);
+    }
+
+    function closeToast(element) {
+        element.parentElement.remove();
+    }
+
     addTopicForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(addTopicForm);
@@ -186,15 +223,20 @@
         const data = await response.json();
 
         if (response.ok) {
-            console.log(data.message);
+            showToast(data.message, 'success');
             addTopicModal.style.display = 'none';
-            loadTopics(); // Reload topics
+            await loadTopics(); // Reload topics
         } else {
-            console.error(data.error);
+            showToast(data.error, 'error');
         }
     });
 
-    loadTopics(); // Initial load
+    async function init() {
+      await loadHeaderFooter();
+      await loadTopics();
+    }
+
+    init();
   </script>
 </body>
 </html>

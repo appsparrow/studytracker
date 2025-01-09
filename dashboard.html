@@ -8,23 +8,46 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="dashboard-container">
-    <h1>Dashboard</h1>
-    <div class="progress-bar">
-      <div class="progress" style="width: 60%;"></div>
+  <div id="toast-container"></div>
+  <div class="app-container">
+    <div id="header-container"></div>
+    <div class="dashboard-container">
+      <h1>Dashboard</h1>
+      <div class="progress-bar">
+        <div class="progress" style="width: 60%;"></div>
+      </div>
+      <p>60% Completed</p>
+      <div class="quick-links">
+        <a href="topics.html" class="btn">Topics List</a>
+        <a href="agileboard.html" class="btn">Agile Board</a>
+      </div>
+      <div class="reminders">
+        <h2>Upcoming Reminders</h2>
+        <ul>
+          <li>Complete Cell Structure by Friday</li>
+          <li>Review Atomic Structure notes</li>
+        </ul>
+      </div>
     </div>
-    <p>60% Completed</p>
-    <div class="quick-links">
-      <a href="topics.html" class="btn">Topics List</a>
-      <a href="agileboard.html" class="btn">Agile Board</a>
-    </div>
-    <div class="reminders">
-      <h2>Upcoming Reminders</h2>
-      <ul>
-        <li>Complete Cell Structure by Friday</li>
-        <li>Review Atomic Structure notes</li>
-      </ul>
-    </div>
+    <div id="footer-container"></div>
   </div>
+
+  <script>
+    const headerContainer = document.getElementById('header-container');
+    const footerContainer = document.getElementById('footer-container');
+
+    // Load header and footer
+    async function loadHeaderFooter() {
+      const headerResponse = await fetch('header.html');
+      const headerContent = await headerResponse.text();
+      headerContainer.innerHTML = headerContent;
+
+      const footerResponse = await fetch('footer.html');
+      const footerContent = await footerResponse.text();
+      footerContainer.innerHTML = footerContent;
+    }
+
+    loadHeaderFooter();
+  </script>
 </body>
 </html>
